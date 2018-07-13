@@ -12,12 +12,12 @@ class GettextReader
      * @var int
      * @example 0: low endian, 1: big endian
      */
-    protected $BYTEORDER = 0;
+    protected $byteOrder = 0;
 
     /**
      * @var null|FileReader
      */
-    protected $STREAM = null;
+    protected $fileReader = null;
 
     /**
      * @var bool
@@ -90,13 +90,13 @@ class GettextReader
         $magic1 = "\x95\x04\x12\xde";
         $magic2 = "\xde\x12\x04\x95";
 
-        $this->STREAM = $fileReader;
-        $magic        = $this->read(4);
+        $this->fileReader = $fileReader;
+        $magic            = $this->read(4);
 
         if ($magic == $magic1) {
-            $this->BYTEORDER = 1;
+            $this->byteOrder = 1;
         } elseif ($magic == $magic2) {
-            $this->BYTEORDER = 0;
+            $this->byteOrder = 0;
         } else {
             //$this->error = 1; // not MO file
             return false;
@@ -114,13 +114,13 @@ class GettextReader
      */
     public function readint()
     {
-        if ($this->BYTEORDER == 0) {
+        if ($this->byteOrder == 0) {
             // low endian
-            $input = unpack('V', $this->STREAM->read(4));
+            $input = unpack('V', $this->fileReader->read(4));
             return array_shift($input);
         } else {
             // big endian
-            $input = unpack('N', $this->STREAM->read(4));
+            $input = unpack('N', $this->fileReader->read(4));
             return array_shift($input);
         }
     }
@@ -131,7 +131,7 @@ class GettextReader
      */
     public function read($bytes)
     {
-        return $this->STREAM->read($bytes);
+        return $this->fileReader->read($bytes);
     }
 
     /**
@@ -140,12 +140,12 @@ class GettextReader
      */
     public function readintarray($count)
     {
-        if ($this->BYTEORDER == 0) {
+        if ($this->byteOrder == 0) {
             // low endian
-            return unpack('V' . $count, $this->STREAM->read(4 * $count));
+            return unpack('V' . $count, $this->fileReader->read(4 * $count));
         } else {
             // big endian
-            return unpack('N' . $count, $this->STREAM->read(4 * $count));
+            return unpack('N' . $count, $this->fileReader->read(4 * $count));
         }
     }
 
@@ -163,11 +163,11 @@ class GettextReader
 
         /* get original and translations tables */
         if (!is_array($this->tableOriginals)) {
-            $this->STREAM->seekto($this->originals);
+            $this->fileReader->seekto($this->originals);
             $this->tableOriginals = $this->readintarray($this->total * 2);
         }
         if (!is_array($this->tableTranslations)) {
-            $this->STREAM->seekto($this->translations);
+            $this->fileReader->seekto($this->translations);
             $this->tableTranslations = $this->readintarray($this->total * 2);
         }
 
@@ -175,10 +175,10 @@ class GettextReader
             $this->cacheTranslations = [];
             /* read all strings in the cache */
             for ($i = 0; $i < $this->total; $i++) {
-                $this->STREAM->seekto($this->tableOriginals[$i * 2 + 2]);
-                $original = $this->STREAM->read($this->tableOriginals[$i * 2 + 1]);
-                $this->STREAM->seekto($this->tableTranslations[$i * 2 + 2]);
-                $translation                        = $this->STREAM->read($this->tableTranslations[$i * 2 + 1]);
+                $this->fileReader->seekto($this->tableOriginals[$i * 2 + 2]);
+                $original = $this->fileReader->read($this->tableOriginals[$i * 2 + 1]);
+                $this->fileReader->seekto($this->tableTranslations[$i * 2 + 2]);
+                $translation                        = $this->fileReader->read($this->tableTranslations[$i * 2 + 1]);
                 $this->cacheTranslations[$original] = $translation;
             }
         }
@@ -195,8 +195,8 @@ class GettextReader
         if (!$length) {
             return '';
         }
-        $this->STREAM->seekto($offset);
-        $data = $this->STREAM->read($length);
+        $this->fileReader->seekto($offset);
+        $data = $this->fileReader->read($length);
         return (string)$data;
     }
 
@@ -211,8 +211,8 @@ class GettextReader
         if (!$length) {
             return '';
         }
-        $this->STREAM->seekto($offset);
-        $data = $this->STREAM->read($length);
+        $this->fileReader->seekto($offset);
+        $data = $this->fileReader->read($length);
         return (string)$data;
     }
 
