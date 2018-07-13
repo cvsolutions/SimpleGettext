@@ -1,0 +1,32 @@
+{
+    "name": "cvsolutions/simple-gettext",
+    "description": "Wrapper for php-gettext",
+    "minimum-stability": "dev",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Concetto Vecchio",
+            "email": "info@cvsolutions.it"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "SimpleGettext\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "name": "SimpleGettext",
+            "type": "git",
+            "url": "https://github.com/cvsolutions/SimpleGettext.git"
+        }
+    ],
+    "keywords": [
+        "php",
+        "gettext",
+        "cvsolutions"
+    ]
+}
