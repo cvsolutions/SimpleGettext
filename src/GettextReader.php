@@ -10,12 +10,6 @@ class GettextReader
 {
     /**
      * @var int
-     * Public variable that holds error code (0 if no error)
-     */
-    public $error = 0;
-
-    /**
-     * @var int
      * @example 0: low endian, 1: big endian
      */
     protected $BYTEORDER = 0;
