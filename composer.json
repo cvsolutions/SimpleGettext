@@ -27,6 +27,8 @@
     "keywords": [
         "php",
         "gettext",
+        "po-files",
+        "mo-files",
         "cvsolutions"
     ]
 }
