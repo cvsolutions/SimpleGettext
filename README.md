@@ -8,9 +8,9 @@ Using Composer (recommended) [composer](http://getcomposer.org "composer - packa
 
 ```sh
 curl -s https://getcomposer.org/installer | php --
-php composer.phar require cvsolutions/simple-gettext:dev-master
+php composer.phar require cvsolutions/simple-gettext:1.0
 ```
 If you have installed composer:
 ```sh
-composer require cvsolutions/simple-gettext:dev-master
+composer require cvsolutions/simple-gettext:1.0
 ```
